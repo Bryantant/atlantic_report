@@ -1,0 +1,135 @@
+<style>
+    .print-format {
+        padding-top: 0mm !important;
+        padding-left: 4mm;
+        padding-right: 4mm;
+        padding-bottom: 4mm;
+        font-size: 10px !important;
+        line-height: 1.1 !important;
+    }
+    .print-format td, .print-format th {
+        vertical-align: middle !important;
+        padding: 4px !important;
+        line-height: 1.1 !important;
+    }
+    
+    .text-right { text-align: right !important; }
+    .text-center { text-align: center !important; }
+    .text-left { text-align: left !important; }
+    
+    .text-muted { color: #777; }
+</style>
+
+<h2 class="text-center" style="margin-top: 0px !important;">
+    {%= __(report.report_name) %}
+</h2>
+
+<h5 class="text-center">
+    {%= frappe.datetime.str_to_user(filters.from_date) %}
+    {%= __("to") %}
+    {%= frappe.datetime.str_to_user(filters.to_date) %}
+</h5>
+
+<hr>
+
+<table class="table table-bordered table-condensed">
+    <thead>
+        <tr>
+            {% for (var i = 0; i < report.columns.length; i++) { %}
+                {% 
+                    var col = report.columns[i];
+                    var alignClass = 'text-left';
+
+                    if (col.fieldtype === 'Currency' || col.fieldtype === 'Float' || col.fieldtype === 'Int') {
+                        alignClass = 'text-right';
+                    } else if (col.align) {
+                        alignClass = 'text-' + col.align;
+                    }
+                %}
+                <th class="{%= alignClass %}" style="width:{%= col.width %}px">
+                    {%= col.label %}
+                </th>
+            {% } %}
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for (var j = 0; j < data.length; j++) { %}
+
+            {% 
+                var row = data[j];
+
+                var is_total = row.is_total_row 
+                               || row.is_subtotal_row
+                               || (row.reff && row.reff.toString().includes("TOTAL"));
+
+                var is_header_row = (row.indent === 0 && !is_total);
+            %}
+
+            <tr>
+
+                {% for (var i = 0; i < report.columns.length; i++) { %}
+                
+                    {% 
+                        var col = report.columns[i];
+                        var fieldname = col.fieldname;
+                        var fieldtype = col.fieldtype;
+                        var value = row[fieldname];
+
+                        var alignClass = 'text-left';
+                        if (fieldtype === 'Currency' || fieldtype === 'Float' || fieldtype === 'Int') {
+                            alignClass = 'text-right';
+                        } else if (col.align) {
+                            alignClass = 'text-' + col.align;
+                        }
+                    %}
+
+                    <td class="{%= alignClass %}"
+                        {% if (is_total) { %}
+                            style="background-color:#fafafa; font-weight:bold; padding:6px !important;"
+                        {% } else if (is_header_row) { %}
+                            style="font-weight:bold;"
+                        {% } %}
+                    >
+
+                        {% if (is_total) { %}<b>{% } %}
+
+                        {% if (is_header_row) { %}
+                            {% if (fieldname === "reff") { %}
+                                {%= value %}
+                            {% } else { %}
+                                <span></span>
+                            {% } %}
+
+                        {% } else if (value == null || value === "") { %}
+                            <span></span>
+
+                        {% } else if (fieldtype === "Date") { %}
+                            {%= moment(value).format("DD-MMM-YY") %}
+
+                        {% } else if (fieldtype === "Currency") { %}
+                            {%= format_currency(value, row.currency_display, 2) %}
+
+                        {% } else if (fieldtype === "Int") { %}
+                            {%= format_number(value, null, 0) %}
+
+                        {% } else { %}
+                            {%= value %}
+                        {% } %}
+
+                        {% if (is_total) { %}</b>{% } %}
+
+                    </td>
+
+                {% } %}
+
+            </tr>
+
+        {% } %}
+    </tbody>
+</table>
+
+<p class="text-right text-muted" style="font-size: 9px; margin-top: 15px;">
+    {%= __("Printed on {0}", [frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string())]) %}
+</p>

@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-11-28 00:49:28.565656",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Report Letter Head",
+ "letterhead": null,
+ "modified": "2025-12-04 12:50:54.589083",
+ "modified_by": "Administrator",
+ "module": "Atlantic Reportg",
+ "name": "Supplier DO Report - Detail",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\r\n    pr.name AS \"PR No:Link/Purchase Receipt:150\",\r\n    DATE_FORMAT(pr.posting_date, '%%d-%%b-%%y') AS 'PR Date',\r\n    pri.purchase_order AS \"PO No:Link/Purchase Order:150\",\r\n    DATE_FORMAT(po.transaction_date, '%%d-%%b-%%y') AS 'PO Date',\r\n    pr.supplier_name AS \"Supplier Name:Data:200\",\r\n    pr.status AS \"Status:Data:100\",\r\n    \r\n    -- MODIFIKASI: Gabungan Code - Name - Brand\r\n    -- Tipe diubah ke :Data karena ini bukan lagi ID unik untuk Link\r\n    CONCAT_WS(' / ', pri.item_code, pri.item_name, i.brand) AS \"Item Code / Item Name / Brand:Data:250\",\r\n    \r\n    pri.qty AS \"Qty:Float:100\",\r\n    pr.currency AS 'Ccy',\r\n    pri.rate AS \"Price:Currency/ccy:120\",\r\n    pri.amount AS \"Total:Currency/ccy:120\"\r\nFROM\r\n    `tabPurchase Receipt` AS pr\r\nJOIN\r\n    `tabPurchase Receipt Item` AS pri ON pri.parent = pr.name\r\nLEFT JOIN\r\n    `tabPurchase Order` AS po ON po.name = pri.purchase_order\r\n-- JOIN BARU: Mengambil data Brand dari master Item\r\nLEFT JOIN\r\n    `tabItem` AS i ON i.name = pri.item_code\r\nWHERE\r\n    pr.posting_date BETWEEN %(from_date)s AND %(to_date)s\r\nORDER BY\r\n    pr.posting_date ASC, pr.name ASC;",
+ "ref_doctype": "Purchase Receipt",
+ "report_name": "Supplier DO Report - Detail",
+ "report_script": "",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Report User"
+  }
+ ],
+ "timeout": 0
+}
