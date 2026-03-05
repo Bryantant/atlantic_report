@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-11-28 01:41:28.684885",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Report Letter Head",
+ "letterhead": null,
+ "modified": "2025-12-04 12:51:43.193726",
+ "modified_by": "Administrator",
+ "module": "Atlantic Report",
+ "name": "Inventory Report - Profit",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\r\n    -- Info Item\r\n    CONCAT_WS(' / ', sii.item_code, sii.item_name, i.brand) AS \"Item Info:Data:300\",\r\n    \r\n    -- Kolom Penjualan\r\n    SUM(IF(si.is_return = 0, sii.qty, 0)) AS \"Qty Sale:Float:120\",\r\n    -- Hapus referensi /ccy agar menggunakan default currency sistem (Base)\r\n    SUM(IF(si.is_return = 0, sii.base_net_amount, 0)) AS \"Sale Amount:Currency:150\",\r\n    \r\n    -- HPP\r\n    SUM(IF(si.is_return = 0, (sii.qty * sii.incoming_rate), 0)) AS \"Cost Amount:Currency:150\",\r\n    \r\n    -- Kolom Retur\r\n    SUM(IF(si.is_return = 1, sii.qty, 0)) AS \"Qty Retur:Float:120\",\r\n    SUM(IF(si.is_return = 1, sii.base_net_amount, 0)) AS \"Return Amount:Currency:150\",\r\n    SUM(IF(si.is_return = 1, (sii.qty * sii.incoming_rate), 0)) AS \"Cost Retur Amt:Currency:150\",\r\n    \r\n    -- Profit\r\n    (SUM(sii.base_net_amount)) AS \"Net Sales:Currency:150\",\r\n    (SUM(sii.base_net_amount) - SUM(sii.qty * sii.incoming_rate)) AS \"Gross Profit:Currency:150\",\r\n    \r\n    -- Persentase\r\n    IF(\r\n        SUM(sii.base_net_amount) = 0, 0,\r\n        (\r\n            (SUM(sii.base_net_amount) - SUM(sii.qty * sii.incoming_rate)) / SUM(sii.base_net_amount)\r\n        ) * 100\r\n    ) AS \"Percent:Int:100\"\r\n\r\nFROM\r\n    `tabSales Invoice Item` AS sii\r\nJOIN\r\n    `tabSales Invoice` AS si ON si.name = sii.parent\r\nLEFT JOIN\r\n    `tabItem` AS i ON i.name = sii.item_code\r\nWHERE\r\n    si.docstatus = 1\r\n    AND si.posting_date BETWEEN %(from_date)s AND %(to_date)s\r\nGROUP BY\r\n    sii.item_code\r\nORDER BY\r\n    (SUM(sii.base_net_amount) - SUM(sii.qty * sii.incoming_rate)) DESC;",
+ "ref_doctype": "Sales Invoice",
+ "report_name": "Inventory Report - Profit",
+ "report_script": "",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Report User"
+  }
+ ],
+ "timeout": 0
+}

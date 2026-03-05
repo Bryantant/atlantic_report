@@ -1,5 +1,5 @@
 app_name = "atlantic_report"
-app_title = "Atlantic Reportg"
+app_title = "Atlantic Report"
 app_publisher = "Hicom System"
 app_description = "Report"
 app_email = "h1com.syst3m@gmail.com"
@@ -15,7 +15,7 @@ app_license = "mit"
 # 	{
 # 		"name": "atlantic_report",
 # 		"logo": "/assets/atlantic_report/logo.png",
-# 		"title": "Atlantic Reportg",
+# 		"title": "Atlantic Report",
 # 		"route": "/atlantic_report",
 # 		"has_permission": "atlantic_report.api.permission.has_app_permission"
 # 	}

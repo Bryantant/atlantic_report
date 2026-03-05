@@ -1,0 +1,29 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-11-26 16:19:27.154173",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "Report Letter Head",
+ "letterhead": null,
+ "modified": "2025-12-04 12:53:43.937715",
+ "modified_by": "Administrator",
+ "module": "Atlantic Report",
+ "name": "Statement of Account Payables",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Purchase Invoice",
+ "report_name": "Statement of Account Payables",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Report User"
+  }
+ ],
+ "timeout": 0
+}

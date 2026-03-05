@@ -1,0 +1,35 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-11-28 02:00:33.577788",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Report Letter Head",
+ "letterhead": null,
+ "modified": "2025-12-04 14:29:54.402080",
+ "modified_by": "Administrator",
+ "module": "Atlantic Report",
+ "name": "Inventory Report - Stock Ending Balance",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "Stock Ledger Entry",
+ "report_name": "Inventory Report - Stock Ending Balance",
+ "report_script": "",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Report User"
+  },
+  {
+   "role": "Sales User 1"
+  }
+ ],
+ "timeout": 0
+}

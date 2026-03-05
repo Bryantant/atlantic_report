@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-10-27 16:32:56.619115",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 1,
+ "is_standard": "Yes",
+ "json": "{}",
+ "letter_head": "Report Letter Head",
+ "letterhead": null,
+ "modified": "2025-12-10 10:15:07.387112",
+ "modified_by": "Administrator",
+ "module": "Atlantic Report",
+ "name": "Sales Report - per Salesman",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\r\n    st.sales_person AS 'Sales Person:Link/Sales Person:200',\r\n    dn.currency AS 'Ccy',\r\n    SUM(dn.total) AS \"Amount:Currency/ccy:\",\r\n    SUM(dn.total_taxes_and_charges) AS \"Tax:Currency/ccy:\",\r\n    SUM(dn.discount_amount) AS 'Disc:Currency/ccy:',\r\n    SUM(dn.grand_total) AS \"Total:Currency/ccy:\"\r\nFROM\r\n    `tabDelivery Note` AS dn\r\nINNER JOIN\r\n    /* SUBQUERY: Hanya ambil kombinasi Parent + Sales Person yang unik */\r\n    (\r\n        SELECT DISTINCT parent, sales_person\r\n        FROM `tabSales Team`\r\n        WHERE parenttype = 'Delivery Note' /* Pastikan hanya mengambil tipe Delivery Note */\r\n    ) AS st ON st.parent = dn.name\r\nWHERE\r\n    dn.docstatus = 1\r\n    AND dn.is_return = 0\r\n    AND dn.posting_date BETWEEN %(from_date)s AND %(to_date)s\r\nGROUP BY\r\n    st.sales_person, dn.currency\r\nORDER BY\r\n    SUM(dn.grand_total) DESC;",
+ "ref_doctype": "Delivery Note",
+ "report_name": "Sales Report - per Salesman",
+ "report_script": "",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Report User"
+  }
+ ],
+ "timeout": 0
+}
