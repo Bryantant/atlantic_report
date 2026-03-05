@@ -1,4 +1,4 @@
-frappe.query_reports["Delivering & Invoicing Report"] = {
+frappe.query_reports["Delivering Invoicing Report"] = {
     "filters": [
         {
             "fieldname": "from_date",
