@@ -48,8 +48,17 @@ def get_data(filters):
     if not filters.to_date: filters.to_date = today()
     if not filters.from_date: filters.from_date = today()
 
-    cond = "name = %(customer)s" if filters.customer else "docstatus < 2"
-    customers = frappe.db.sql(f"SELECT name, customer_name FROM `tabCustomer` WHERE {cond}", filters, as_dict=True)
+    customer_params = {"customer": filters.get("customer")}
+    customers = frappe.db.sql(
+        """
+        SELECT name, customer_name
+        FROM `tabCustomer`
+        WHERE docstatus < 2
+          AND (%(customer)s IS NULL OR name = %(customer)s)
+        """,
+        customer_params,
+        as_dict=True,
+    )
 
     final_data = []
     

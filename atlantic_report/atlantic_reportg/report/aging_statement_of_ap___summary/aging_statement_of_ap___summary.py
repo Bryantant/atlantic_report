@@ -36,14 +36,13 @@ def get_columns():
 
 
 def get_data(filters):
-    conditions = ""
-    if filters.get("supplier"):
-        conditions += " AND supplier = %(supplier)s"
+    params = {
+        "to_date": filters.get("to_date"),
+        "supplier": filters.get("supplier"),
+        "from_date": filters.get("from_date"),
+    }
 
-    if filters.get("from_date"):
-        conditions += " AND posting_date >= %(from_date)s"
-
-    sql = f"""
+    sql = """
         SELECT
             supplier,
             supplier_name,
@@ -55,11 +54,12 @@ def get_data(filters):
             docstatus = 1
             AND outstanding_amount > 0
             AND posting_date <= %(to_date)s
-            {conditions}
+            AND (%(supplier)s IS NULL OR supplier = %(supplier)s)
+            AND (%(from_date)s IS NULL OR posting_date >= %(from_date)s)
         ORDER BY supplier ASC
     """
 
-    invoices = frappe.db.sql(sql, filters, as_dict=True)
+    invoices = frappe.db.sql(sql, params, as_dict=True)
 
     summary_map = {}
     today_realtime = getdate(nowdate())

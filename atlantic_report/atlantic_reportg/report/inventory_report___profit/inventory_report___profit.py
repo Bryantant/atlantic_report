@@ -80,16 +80,13 @@ def get_data(filters):
     if not filters.to_date:
         filters.to_date = today()
 
-    # Tambahkan kondisi filter UOM
-    uom_condition = ""
-    if filters.get("uom"):
-        uom_condition = " AND sii.stock_uom = %(uom)s "
+    params = {
+        "from_date": filters.get("from_date"),
+        "to_date": filters.get("to_date"),
+        "uom": filters.get("uom"),
+    }
 
-    conditions = ""
-    if filters.from_date and filters.to_date:
-        conditions += " AND si.posting_date BETWEEN %(from_date)s AND %(to_date)s"
-
-    sql = f"""
+    sql = """
         SELECT
             sii.item_code,
             sii.item_name,
@@ -112,15 +109,18 @@ def get_data(filters):
             `tabSales Invoice` AS si ON si.name = sii.parent
         WHERE
             si.docstatus = 1
-            {conditions}
-            {uom_condition}
+            AND (
+                %(from_date)s IS NULL OR %(to_date)s IS NULL
+                OR si.posting_date BETWEEN %(from_date)s AND %(to_date)s
+            )
+            AND (%(uom)s IS NULL OR sii.stock_uom = %(uom)s)
         GROUP BY
             sii.item_code
         ORDER BY
             item_code
     """
 
-    raw_data = frappe.db.sql(sql, filters, as_dict=True)
+    raw_data = frappe.db.sql(sql, params, as_dict=True)
 
     final_data = []
     style_div = "line-height: 1.5;"

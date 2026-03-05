@@ -33,17 +33,15 @@ def get_columns():
 
 
 def get_data(filters):
-    customer_filter = ""
-    if filters.customer:
-        customer_filter = "AND name = %(customer)s"
-
+    params = {"customer": filters.get("customer")}
     customers = frappe.db.sql(
-        f"""
+        """
         SELECT name, customer_name
         FROM `tabCustomer`
-        WHERE docstatus < 2 {customer_filter}
+        WHERE docstatus < 2
+          AND (%(customer)s IS NULL OR name = %(customer)s)
         """,
-        filters,
+        params,
         as_dict=True,
     )
 

@@ -39,16 +39,16 @@ def get_columns():
 
 
 def get_data(filters):
-    supplier_filter = "AND name = %(supplier)s" if filters.supplier else ""
-
+    params = {"supplier": filters.get("supplier")}
     suppliers = frappe.db.sql(
-        f"""
+        """
         SELECT name, supplier_name
         FROM `tabSupplier`
-        WHERE docstatus < 2 {supplier_filter}
+        WHERE docstatus < 2
+          AND (%(supplier)s IS NULL OR name = %(supplier)s)
         ORDER BY name ASC
         """,
-        filters,
+        params,
         as_dict=True,
     )
 

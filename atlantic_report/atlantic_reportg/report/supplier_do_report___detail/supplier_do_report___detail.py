@@ -102,10 +102,6 @@ def get_data(filters):
     if not filters.get("to_date"):
         filters.to_date = today()
 
-    conditions = ""
-    if filters.from_date and filters.to_date:
-        conditions += " AND pr.posting_date BETWEEN %(from_date)s AND %(to_date)s"
-
     sql = """
         SELECT
             pr.name AS pr_no,
@@ -135,11 +131,11 @@ def get_data(filters):
         LEFT JOIN `tabItem` AS i ON i.name = pri.item_code
         WHERE
             pr.docstatus = 1
-            {conditions}
+            AND pr.posting_date BETWEEN %(from_date)s AND %(to_date)s
         ORDER BY
             pr.posting_date ASC,
             pr.name ASC
-    """.format(conditions=conditions)
+    """
 
     raw_data = frappe.db.sql(sql, filters, as_dict=True)
 

@@ -44,10 +44,11 @@ def get_columns():
 
 def get_data(filters):
     if not filters: filters = frappe._dict()
-
-    conditions = ""
-    if filters.get("supplier"):
-        conditions += " AND pi.supplier = %(supplier)s"
+    params = {
+        "from_date": filters.get("from_date"),
+        "to_date": filters.get("to_date"),
+        "supplier": filters.get("supplier"),
+    }
     
     sql = """
         SELECT
@@ -83,12 +84,12 @@ def get_data(filters):
             pi.docstatus = 1
             AND pi.posting_date >= %(from_date)s
             AND pi.posting_date <= %(to_date)s
-            {conditions}
+            AND (%(supplier)s IS NULL OR pi.supplier = %(supplier)s)
         ORDER BY
             pi.posting_date ASC, pi.name ASC
-    """.format(conditions=conditions)
+    """
 
-    raw_data = frappe.db.sql(sql, filters, as_dict=True)
+    raw_data = frappe.db.sql(sql, params, as_dict=True)
 
     final_data = []
     current_inv = None

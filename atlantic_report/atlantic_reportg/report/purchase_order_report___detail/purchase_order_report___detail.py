@@ -59,12 +59,12 @@ def get_columns():
 def get_data(filters):
     if not filters:
         filters = frappe._dict()
+    params = {
+        "from_date": filters.get("from_date"),
+        "to_date": filters.get("to_date"),
+    }
 
-    conditions = ""
-    if filters.from_date and filters.to_date:
-        conditions += " AND po.transaction_date BETWEEN %(from_date)s AND %(to_date)s"
-
-    sql = f"""
+    sql = """
         SELECT
             po.name as po_no,
             po.status,
@@ -89,11 +89,14 @@ def get_data(filters):
         INNER JOIN `tabPurchase Order Item` poi ON poi.parent = po.name
         LEFT JOIN `tabItem` i ON i.name = poi.item_code
         WHERE po.docstatus = 1
-        {conditions}
+          AND (
+              %(from_date)s IS NULL OR %(to_date)s IS NULL
+              OR po.transaction_date BETWEEN %(from_date)s AND %(to_date)s
+          )
         ORDER BY po.name ASC, poi.idx ASC
     """
 
-    rows = frappe.db.sql(sql, filters, as_dict=True)
+    rows = frappe.db.sql(sql, params, as_dict=True)
 
     # Styles
     style_label = "font-size:10px; color:#777;"

@@ -47,10 +47,11 @@ def get_columns():
 def get_data(filters):
     if not filters.from_date: filters.from_date = add_months(today(), -1)
     if not filters.to_date: filters.to_date = today()
-
-    item_cond = ""
-    if filters.get("item_code"):
-        item_cond = "AND item_code = %(item_code)s"
+    params = {
+        "from_date": filters.from_date,
+        "to_date": filters.to_date,
+        "item_code": filters.get("item_code"),
+    }
 
     # 1. AMBIL DATA TRANSAKSI
     sql = """
@@ -71,15 +72,15 @@ def get_data(filters):
         WHERE
             posting_date BETWEEN %(from_date)s AND %(to_date)s
             AND is_cancelled = 0
-            {item_cond}
+            AND (%(item_code)s IS NULL OR item_code = %(item_code)s)
         ORDER BY
             item_code ASC, 
             posting_date ASC, 
             posting_time ASC,
             creation ASC
-    """.format(item_cond=item_cond)
+    """
     
-    transactions = frappe.db.sql(sql, filters, as_dict=True)
+    transactions = frappe.db.sql(sql, params, as_dict=True)
 
     # 2. AMBIL OPENING BALANCE
     opening_sql = """
@@ -91,11 +92,11 @@ def get_data(filters):
         WHERE 
             posting_date < %(from_date)s
             AND is_cancelled = 0
-            {item_cond}
+            AND (%(item_code)s IS NULL OR item_code = %(item_code)s)
         GROUP BY item_code
-    """.format(item_cond=item_cond)
+    """
     
-    opening_res = frappe.db.sql(opening_sql, filters, as_dict=True)
+    opening_res = frappe.db.sql(opening_sql, params, as_dict=True)
     
     opening_map = {}
     for d in opening_res:

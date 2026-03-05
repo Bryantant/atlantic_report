@@ -30,10 +30,11 @@ def get_columns():
 def get_data(filters):
     if not filters.to_date: filters.to_date = today()
     if not filters.from_date: filters.from_date = today()
-
-    conditions = ""
-    if filters.customer:
-        conditions += " AND customer = %(customer)s"
+    params = {
+        "from_date": filters.from_date,
+        "to_date": filters.to_date,
+        "customer": filters.get("customer"),
+    }
     
     # [HAPUS] Filter Company dibuang agar muncul semua data
 
@@ -54,12 +55,12 @@ def get_data(filters):
             docstatus = 1
             AND posting_date >= %(from_date)s
             AND posting_date <= %(to_date)s
-            {conditions}
+            AND (%(customer)s IS NULL OR customer = %(customer)s)
         ORDER BY
             posting_date ASC, name ASC
-    """.format(conditions=conditions)
+    """
 
-    invoices = frappe.db.sql(sql, filters, as_dict=True)
+    invoices = frappe.db.sql(sql, params, as_dict=True)
 
     final_data = []
     grand_totals = {} 

@@ -74,7 +74,11 @@ def get_columns():
     ]
 
 def get_data(filters):
-    conditions = get_conditions(filters)
+    params = {
+        "from_date": filters.get("from_date") if filters else None,
+        "to_date": filters.get("to_date") if filters else None,
+        "customer": filters.get("customer") if filters else None,
+    }
     
     sql = """
         SELECT
@@ -121,12 +125,16 @@ def get_data(filters):
             `tabDelivery Note Item` dni ON dn.name = dni.parent
         WHERE
             dn.docstatus = 1
-            {conditions}
+            AND (
+                %(from_date)s IS NULL OR %(to_date)s IS NULL
+                OR dn.posting_date BETWEEN %(from_date)s AND %(to_date)s
+            )
+            AND (%(customer)s IS NULL OR dn.customer = %(customer)s)
         ORDER BY
             dn.posting_date DESC, dn.name DESC
-    """.format(conditions=conditions)
+    """
 
-    raw_data = frappe.db.sql(sql, filters, as_dict=True)
+    raw_data = frappe.db.sql(sql, params, as_dict=True)
     
     final_data = []
     
@@ -229,11 +237,3 @@ def get_data(filters):
         final_data.append(total_row)
 
     return final_data
-
-def get_conditions(filters):
-    conditions = ""
-    if filters.get("from_date") and filters.get("to_date"):
-        conditions += " AND dn.posting_date BETWEEN %(from_date)s AND %(to_date)s"
-    if filters.get("customer"):
-        conditions += " AND dn.customer = %(customer)s"
-    return conditions

@@ -33,12 +33,11 @@ def get_data(filters):
     if filters is None: filters = frappe._dict()
     if not isinstance(filters, frappe._dict): filters = frappe._dict(filters)
     if not filters.to_date: filters.to_date = today()
-
-    conditions = ""
-    if filters.customer:
-        conditions += " AND si.customer = %(customer)s"
-    if filters.from_date:
-        conditions += " AND si.posting_date >= %(from_date)s"
+    params = {
+        "to_date": filters.to_date,
+        "customer": filters.get("customer"),
+        "from_date": filters.get("from_date"),
+    }
 
     sql = """
         SELECT
@@ -58,14 +57,15 @@ def get_data(filters):
             si.docstatus = 1 
             AND si.outstanding_amount > 0
             AND si.posting_date <= %(to_date)s
-            {conditions}
+            AND (%(customer)s IS NULL OR si.customer = %(customer)s)
+            AND (%(from_date)s IS NULL OR si.posting_date >= %(from_date)s)
         GROUP BY
             si.name
         ORDER BY
             si.customer ASC, si.posting_date ASC
-    """.format(conditions=conditions)
+    """
 
-    raw_data = frappe.db.sql(sql, filters, as_dict=True)
+    raw_data = frappe.db.sql(sql, params, as_dict=True)
 
     final_data = []
     current_customer = None

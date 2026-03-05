@@ -1,4 +1,4 @@
-""# Copyright (c) 2025, Takwindo and contributors
+# Copyright (c) 2025, Takwindo and contributors
 # For license information, please see license.txt
 
 import frappe
@@ -46,13 +46,11 @@ def get_data(filters):
     # 1. Ambil Data Sales Person dari Master Customer
     customer_sales_map = get_customer_sales_persons()
 
-    # 2. Kondisi SQL
-    conditions = ""
-    if filters.customer:
-        conditions += " AND customer = %(customer)s"
-    
-    if filters.from_date:
-        conditions += " AND posting_date >= %(from_date)s"
+    params = {
+        "to_date": filters.get("to_date"),
+        "customer": filters.get("customer"),
+        "from_date": filters.get("from_date"),
+    }
 
     sql = """
         SELECT
@@ -67,12 +65,13 @@ def get_data(filters):
             docstatus = 1
             AND outstanding_amount > 0
             AND posting_date <= %(to_date)s
-            {conditions}
+            AND (%(customer)s IS NULL OR customer = %(customer)s)
+            AND (%(from_date)s IS NULL OR posting_date >= %(from_date)s)
         ORDER BY
             customer ASC
-    """.format(conditions=conditions)
+    """
 
-    invoices = frappe.db.sql(sql, filters, as_dict=True)
+    invoices = frappe.db.sql(sql, params, as_dict=True)
 
     # 3. Proses Aggregasi (Grouping per Customer + Currency)
     summary_map = {}
