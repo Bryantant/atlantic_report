@@ -118,9 +118,9 @@ def get_by_month_transactions(supplier, filters):
     - Journal Entry (Journal Adj.) TIDAK ditampilkan
     """
 
-    # Opening balance → debit_in_account_currency - credit_in_account_currency
+    # Opening balance in invoice (transaction) currency
     opening_sql = """
-        SELECT SUM(debit_in_account_currency - credit_in_account_currency)
+        SELECT SUM(debit_in_transaction_currency - credit_in_transaction_currency)
         FROM `tabGL Entry`
         WHERE party_type = 'Supplier'
           AND party = %s
@@ -136,11 +136,11 @@ def get_by_month_transactions(supplier, filters):
             gle.posting_date AS date,
             gle.voucher_no   AS reff,
 
-            -- PENTING: gunakan nilai dalam account currency
-            gle.debit_in_account_currency  AS debit,
-            gle.credit_in_account_currency AS credit,
+            -- gunakan nilai & currency dari transaksi (invoice currency)
+            gle.debit_in_transaction_currency  AS debit,
+            gle.credit_in_transaction_currency AS credit,
 
-            gle.account_currency AS currency,
+            gle.transaction_currency AS currency,
 
             CASE 
                 WHEN gle.voucher_type = 'Purchase Invoice' THEN 'INVOICE'
@@ -210,7 +210,7 @@ def get_by_month_transactions(supplier, filters):
 
     # DETAIL TRANSAKSI
     for row in transactions:
-        # balance dalam account currency juga
+        # balance dalam transaction currency
         running_balance += flt(row.debit) - flt(row.credit)
 
         row.balance = flt(running_balance, 2)
