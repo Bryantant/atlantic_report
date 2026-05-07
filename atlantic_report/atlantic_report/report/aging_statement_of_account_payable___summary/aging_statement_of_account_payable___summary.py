@@ -48,7 +48,7 @@ def get_data(filters):
             supplier_name,
             posting_date,
             currency,
-            outstanding_amount
+            (grand_total - paid_amount) AS outstanding_amount
         FROM `tabPurchase Invoice`
         WHERE
             docstatus = 1

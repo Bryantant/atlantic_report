@@ -95,10 +95,10 @@ def get_data(filters):
 def get_supplier_outstanding(supplier, filters):
 
     sql = """
-        SELECT 
+        SELECT
             pi.name AS reff,
             pi.posting_date AS date,
-            pi.outstanding_amount AS amount,
+            (pi.grand_total - pi.paid_amount) AS amount,
             pi.currency,
             'INVOICE' AS description,
             COALESCE(pi.bill_no, pi.name) AS bill_no

@@ -44,11 +44,11 @@ def get_data(filters):
             pi.posting_date,
             pi.due_date,
             pi.currency,
-            pi.outstanding_amount
+            (pi.grand_total - pi.paid_amount) AS outstanding_amount
         FROM
             `tabPurchase Invoice` pi
         WHERE
-            pi.docstatus = 1 
+            pi.docstatus = 1
             AND pi.outstanding_amount > 0
             AND pi.posting_date <= %(to_date)s
             AND (%(supplier)s IS NULL OR pi.supplier = %(supplier)s)
