@@ -90,15 +90,15 @@ def get_data(filters):
         SELECT
             sii.item_code,
             sii.item_name,
-            
+
             SUM(IF(si.is_return = 0, sii.qty, 0)) AS qty_sale,
             SUM(IF(si.is_return = 1, sii.qty, 0)) AS qty_return,
 
             SUM(IF(si.is_return = 0, sii.base_net_amount, 0)) AS sale_amount,
             SUM(IF(si.is_return = 1, sii.base_net_amount, 0)) AS return_amount,
 
-            SUM(IF(si.is_return = 0, (sii.qty * sii.incoming_rate), 0)) AS cost_amount,
-            SUM(IF(si.is_return = 1, (sii.qty * sii.incoming_rate), 0)) AS cost_return_amt,
+            SUM(IF(si.is_return = 0, (sii.qty * IFNULL(NULLIF(sii.incoming_rate, 0), IFNULL(dni.incoming_rate, 0))), 0)) AS cost_amount,
+            SUM(IF(si.is_return = 1, (sii.qty * IFNULL(NULLIF(sii.incoming_rate, 0), IFNULL(dni.incoming_rate, 0))), 0)) AS cost_return_amt,
 
             MAX(si.currency) as currency,
             MAX(sii.stock_uom) as uom
@@ -107,6 +107,8 @@ def get_data(filters):
             `tabSales Invoice Item` AS sii
         JOIN
             `tabSales Invoice` AS si ON si.name = sii.parent
+        LEFT JOIN
+            `tabDelivery Note Item` AS dni ON dni.name = sii.dn_detail
         WHERE
             si.docstatus = 1
             AND (

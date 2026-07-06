@@ -131,7 +131,10 @@ def get_data(filters):
             )
             AND (%(customer)s IS NULL OR dn.customer = %(customer)s)
         ORDER BY
-            dn.posting_date DESC, dn.name DESC
+            inv_date IS NULL ASC,
+            inv_date ASC,
+            dn.posting_date ASC,
+            dn.name ASC
     """
 
     raw_data = frappe.db.sql(sql, params, as_dict=True)
