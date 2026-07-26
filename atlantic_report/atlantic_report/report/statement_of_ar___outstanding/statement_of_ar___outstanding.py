@@ -20,7 +20,7 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"fieldname": "date", "label": "DATE", "fieldtype": "Date", "width": 95},
+        {"fieldname": "date", "label": "DATE", "fieldtype": "Date", "width": 120},
         {"fieldname": "reff", "label": "REFF.", "fieldtype": "Data", "width": 230},
         {"fieldname": "currency_display", "label": "Ccy", "fieldtype": "Data", "width": 45},
         {"fieldname": "description", "label": "DESCRIPTION", "fieldtype": "Data", "width": 110},
@@ -38,6 +38,7 @@ def get_data(filters):
         FROM `tabCustomer`
         WHERE docstatus < 2
           AND (%(customer)s IS NULL OR name = %(customer)s)
+        ORDER BY name ASC
         """,
         params,
         as_dict=True,

@@ -12,10 +12,10 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"label": "DO No.", "fieldname": "do_no", "fieldtype": "Link", "options": "Delivery Note", "width": 100},
+        {"label": "DO No.", "fieldname": "do_no", "fieldtype": "Link", "options": "Delivery Note", "width": 120},
         {"label": "DO Date", "fieldname": "do_date", "fieldtype": "Data", "width": 90},
         {"label": "Customer", "fieldname": "customer", "fieldtype": "Data", "width": 280},
-        {"label": "Invoice No.", "fieldname": "inv_no", "fieldtype": "Link", "options": "Sales Invoice", "width": 100},
+        {"label": "Invoice No.", "fieldname": "inv_no", "fieldtype": "Link", "options": "Sales Invoice", "width": 120},
         {"label": "Inv. Date", "fieldname": "inv_date", "fieldtype": "Data", "width": 90},
         {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 100},
         {"label": "Ccy", "fieldname": "currency", "fieldtype": "Data", "width": 50},
@@ -47,7 +47,7 @@ def get_data(filters):
         GROUP BY
             dn.name
         ORDER BY
-            dn.posting_date ASC, dn.name ASC
+            dn.name ASC
     """
 
     return frappe.db.sql(sql, filters, as_dict=True)

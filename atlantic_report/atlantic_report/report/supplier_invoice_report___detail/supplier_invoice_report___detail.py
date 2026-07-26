@@ -16,26 +16,26 @@ def get_columns():
             "fieldname": "inv_details", 
             "label": "INV NO.<br>REC./INV. DATE<br>RECEIVED BY", 
             "fieldtype": "Data", 
-            "width": 250,
+            "width": 200,
             "align": "left"
         },
         {
             "fieldname": "supp_terms", 
             "label": "SUPP / STATUS<br>TERMS / DUE", 
             "fieldtype": "Data", 
-            "width": 310
+            "width": 230
         },
         {
             "fieldname": "do_po", 
             "label": "DO NO.<br>PO NO.", 
             "fieldtype": "Data", 
-            "width": 110
+            "width": 100
         },
         {
             "fieldname": "item_desc_brand", 
             "label": "ITEM CODE / BRAND<br>DESCRIPTION", 
             "fieldtype": "Data", 
-            "width": 350
+            "width": 390
         },
         {"fieldname": "qty_ccy", "label": "QTY", "fieldtype": "Data", "width": 110, "align": "right"},
         {"fieldname": "price", "label": "PRICE", "fieldtype": "Currency", "options": "currency", "width": 100},
@@ -86,14 +86,14 @@ def get_data(filters):
             AND pi.posting_date <= %(to_date)s
             AND (%(supplier)s IS NULL OR pi.supplier = %(supplier)s)
         ORDER BY
-            pi.posting_date ASC, pi.name ASC
+            pi.name ASC
     """
 
     raw_data = frappe.db.sql(sql, params, as_dict=True)
 
     final_data = []
     current_inv = None
-    std_style = "line-height: 1.1em; font-size: 10px; color: #black;"
+    std_style = "line-height: 1.1em; font-size: 12px; color: #black;"
     
     # Inisialisasi dictionary untuk menyimpan Grand Total per mata uang
     totals_by_currency = {}

@@ -1,0 +1,5 @@
+.list-row-activity .comment-count,
+.list-row-activity .list-row-like,
+.list-row-head .list-liked-by-me {
+	display: none !important;
+}

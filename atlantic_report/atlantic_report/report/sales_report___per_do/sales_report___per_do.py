@@ -12,11 +12,11 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"label": "DO No.", "fieldname": "do_no", "fieldtype": "Link", "options": "Delivery Note", "width": 100},
+        {"label": "DO No.", "fieldname": "do_no", "fieldtype": "Link", "options": "Delivery Note", "width": 120},
         {"label": "Date", "fieldname": "date", "fieldtype": "Data", "width": 90},
         {"label": "Customer Name", "fieldname": "customer_name", "fieldtype": "Data", "width": 260},
         {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 90},
-        {"label": "Ccy", "fieldname": "currency", "fieldtype": "Data", "width": 60},
+        {"label": "Ccy", "fieldname": "currency", "fieldtype": "Data", "width": 55},
         {"label": "Amount", "fieldname": "amount", "fieldtype": "Currency", "options": "currency", "width": 120},
         {"label": "Tax", "fieldname": "tax", "fieldtype": "Currency", "options": "currency", "width": 120},
         {"label": "Disc", "fieldname": "disc", "fieldtype": "Currency", "options": "currency", "width": 120},
@@ -44,7 +44,7 @@ def get_data(filters):
             AND dn.is_return = 0
             AND dn.posting_date BETWEEN %(from_date)s AND %(to_date)s
         ORDER BY
-            dn.posting_date ASC
+            dn.name ASC
     """
 
     return frappe.db.sql(sql, filters, as_dict=True)

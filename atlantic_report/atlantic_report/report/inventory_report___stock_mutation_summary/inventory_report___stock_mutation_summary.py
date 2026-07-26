@@ -22,7 +22,7 @@ def get_columns():
             "fieldname": "item_info", 
             "label": "ITEM CODE<br>DESCRIPTION", 
             "fieldtype": "Data", 
-            "width": 250,
+            "width": 550,
             "align": "left"
         },
 
@@ -149,7 +149,7 @@ def get_data(filters):
     final_data = []
     company_currency = frappe.get_cached_value('Company',  frappe.defaults.get_user_default("Company"),  "default_currency") or "IDR"
     
-    style_row = "font-size: 10px; line-height: 1.5; color: #36414c;"
+    style_row = "font-size: 12px; line-height: 1.5; color: #36414c;"
     style_bold = "font-weight: bold; color: #333;"
 
     for row in raw_data:

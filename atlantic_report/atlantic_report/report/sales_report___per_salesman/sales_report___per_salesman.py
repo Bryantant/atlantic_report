@@ -45,7 +45,7 @@ def get_data(filters):
         GROUP BY
             st.sales_person, dn.currency
         ORDER BY
-            SUM(dn.grand_total) DESC
+            sales_person ASC
     """
 
     return frappe.db.sql(sql, filters, as_dict=True)

@@ -4,7 +4,7 @@ frappe.query_reports["Cust Payment Report - Per Customer"] = {
             "fieldname": "from_date",
             "label": __("From Date"),
             "fieldtype": "Date",
-            "default": frappe.datetime.add_months(frappe.datetime.get_today(), -12),
+            "default": frappe.datetime.month_start(),
             "reqd": 1
         },
         {

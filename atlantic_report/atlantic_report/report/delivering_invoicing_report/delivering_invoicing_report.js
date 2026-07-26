@@ -5,7 +5,7 @@ frappe.query_reports["Delivering Invoicing Report"] = {
             "label": __("From Date"),
             "fieldtype": "Date",
             "reqd": 1,
-            "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
+            "default": frappe.datetime.month_start()
         },
         {
             "fieldname": "to_date",

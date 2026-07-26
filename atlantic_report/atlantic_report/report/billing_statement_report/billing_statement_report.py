@@ -82,7 +82,7 @@ def get_data(filters):
             AND posting_date <= %(to_date)s
             AND (%(customer)s IS NULL OR customer = %(customer)s)
         ORDER BY
-            posting_date ASC, name ASC
+            name ASC
     """
 
     invoices = frappe.db.sql(sql, params, as_dict=True)

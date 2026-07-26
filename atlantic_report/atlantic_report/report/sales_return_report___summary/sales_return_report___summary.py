@@ -53,7 +53,7 @@ def get_data(filters):
             AND dn.posting_date BETWEEN %(from_date)s AND %(to_date)s
             AND dn.is_return = 1
         ORDER BY
-            dn.posting_date ASC
+            dn.name ASC
     """
 
     return frappe.db.sql(sql, filters, as_dict=True)

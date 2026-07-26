@@ -17,7 +17,7 @@ def get_columns():
         # [HAPUS] Kolom No. sudah dibuang
         
         {"fieldname": "invoice_no", "label": _("Invoice No."), "fieldtype": "Link", "options": "Sales Invoice", "width": 160},
-        {"fieldname": "inv_date", "label": _("Inv. Date"), "fieldtype": "Date", "width": 100},
+        {"fieldname": "inv_date", "label": _("Inv. Date"), "fieldtype": "Date", "width": 110},
         {"fieldname": "customer_display", "label": _("Customer"), "fieldtype": "Data", "width": 250},
         {"fieldname": "status", "label": _("Status"), "fieldtype": "Data", "width": 100}, 
         {"fieldname": "currency", "label": _("Curr."), "fieldtype": "Data", "width": 50},
@@ -57,7 +57,7 @@ def get_data(filters):
             AND posting_date <= %(to_date)s
             AND (%(customer)s IS NULL OR customer = %(customer)s)
         ORDER BY
-            posting_date ASC, name ASC
+            name ASC
     """
 
     invoices = frappe.db.sql(sql, params, as_dict=True)

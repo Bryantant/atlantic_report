@@ -104,7 +104,7 @@ def get_data(filters):
         GROUP BY
             pi.name, pii.purchase_order
         ORDER BY
-            pi.name ASC
+            pii.purchase_order ASC
     """
     
     return frappe.db.sql(sql_query, filters, as_dict=True)

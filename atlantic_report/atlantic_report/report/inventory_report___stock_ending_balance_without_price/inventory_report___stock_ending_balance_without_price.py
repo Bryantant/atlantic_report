@@ -24,7 +24,7 @@ def get_columns():
             "fieldname": "item_info",
             "label": "ITEM CODE<br>DESCRIPTION",
             "fieldtype": "Data",
-            "width": 350,
+            "width": 650,
             "align": "left"
         },
         {

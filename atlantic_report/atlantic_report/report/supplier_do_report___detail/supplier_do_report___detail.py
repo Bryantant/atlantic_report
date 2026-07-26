@@ -133,7 +133,6 @@ def get_data(filters):
             pr.docstatus = 1
             AND pr.posting_date BETWEEN %(from_date)s AND %(to_date)s
         ORDER BY
-            pr.posting_date ASC,
             pr.name ASC
     """
 

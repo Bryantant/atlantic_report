@@ -12,21 +12,21 @@ def execute(filters=None):
 
 def get_columns():
     def f_lbl(label):
-        return f"<span style='font-size: 11px; font-weight: bold;'>{label}</span>"
+        return f"<span style='font-size: 12px; font-weight: bold;'>{label}</span>"
 
     return [
-        {"fieldname": "date", "label": f_lbl(_("Date")), "fieldtype": "Date", "width": 70},
-        {"fieldname": "invoice_no", "label": f_lbl(_("Invoice No.")), "fieldtype": "Link", "options": "Sales Invoice", "width": 270},
-        {"fieldname": "currency", "label": f_lbl(_("Ccy")), "fieldtype": "Data", "width": 40},
+        {"fieldname": "date", "label": f_lbl(_("Date")), "fieldtype": "Date", "width": 120},
+        {"fieldname": "invoice_no", "label": f_lbl(_("Invoice No.")), "fieldtype": "Link", "options": "Sales Invoice", "width": 230},
+        {"fieldname": "currency", "label": f_lbl(_("Ccy")), "fieldtype": "Data", "width": 45},
         {"fieldname": "sales_ref", "label": f_lbl(_("Sales Ref")), "fieldtype": "Data", "width": 80},
-        {"fieldname": "trm", "label": f_lbl(_("TRM")), "fieldtype": "Int", "width": 40},
-        {"fieldname": "total", "label": f_lbl(_("Total")), "fieldtype": "Currency", "options": "currency", "width": 95},
-        {"fieldname": "range1", "label": f_lbl(_("< 31 Days")), "fieldtype": "Currency", "options": "currency", "width": 85},
-        {"fieldname": "range2", "label": f_lbl(_("31 - 60 Days")), "fieldtype": "Currency", "options": "currency", "width": 85},
-        {"fieldname": "range3", "label": f_lbl(_("61 - 90 Days")), "fieldtype": "Currency", "options": "currency", "width": 85},
-        {"fieldname": "range4", "label": f_lbl(_("> 90 Days")), "fieldtype": "Currency", "options": "currency", "width": 85},
+        {"fieldname": "trm", "label": f_lbl(_("TRM")), "fieldtype": "Int", "width": 45},
+        {"fieldname": "total", "label": f_lbl(_("Total")), "fieldtype": "Currency", "options": "currency", "width": 100},
+        {"fieldname": "range1", "label": f_lbl(_("< 31 Days")), "fieldtype": "Currency", "options": "currency", "width": 100},
+        {"fieldname": "range2", "label": f_lbl(_("31 - 60 Days")), "fieldtype": "Currency", "options": "currency", "width": 100},
+        {"fieldname": "range3", "label": f_lbl(_("61 - 90 Days")), "fieldtype": "Currency", "options": "currency", "width": 100},
+        {"fieldname": "range4", "label": f_lbl(_("> 90 Days")), "fieldtype": "Currency", "options": "currency", "width": 100},
         {"fieldname": "accumulation", "label": f_lbl(_("Accumulation")), "fieldtype": "Currency", "options": "currency", "width": 95},
-        {"fieldname": "ots", "label": f_lbl(_("OTS")), "fieldtype": "Int", "width": 40}
+        {"fieldname": "ots", "label": f_lbl(_("OTS")), "fieldtype": "Int", "width": 60}
     ]
 
 def get_data(filters):

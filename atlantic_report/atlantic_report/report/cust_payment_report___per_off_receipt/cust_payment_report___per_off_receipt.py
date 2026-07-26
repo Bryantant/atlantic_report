@@ -55,7 +55,7 @@ def get_data(filters):
         AND pe.payment_type = 'Receive'
         AND pe.posting_date BETWEEN %(from_date)s AND %(to_date)s
 
-        ORDER BY pe.posting_date ASC, pe.name ASC
+        ORDER BY pe.name ASC
     """
 
     rows = frappe.db.sql(sql, filters, as_dict=True)

@@ -118,7 +118,7 @@ frappe.query_reports["Inventory Report - Stock Mutation Summary"] = {
             const dt = frappe.query_report?.datatable;
             if (!dt) return;
 
-            const H = 40;
+            const H = 45;
 
             // Set option global
             dt.options.cellHeight = H;
@@ -159,7 +159,7 @@ frappe.query_reports["Inventory Report - Stock Mutation Summary"] = {
             "fieldname": "from_date",
             "label": __("From Date"),
             "fieldtype": "Date",
-            "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1),
+            "default": frappe.datetime.month_start(),
             "reqd": 1
         },
         {

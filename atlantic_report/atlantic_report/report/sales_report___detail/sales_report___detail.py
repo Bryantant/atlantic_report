@@ -131,9 +131,6 @@ def get_data(filters):
             )
             AND (%(customer)s IS NULL OR dn.customer = %(customer)s)
         ORDER BY
-            inv_date IS NULL ASC,
-            inv_date ASC,
-            dn.posting_date ASC,
             dn.name ASC
     """
 

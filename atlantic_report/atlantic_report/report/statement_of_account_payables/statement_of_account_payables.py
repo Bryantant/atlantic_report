@@ -20,7 +20,7 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"fieldname": "date", "label": "DATE", "fieldtype": "Date", "width": 100},
+        {"fieldname": "date", "label": "DATE", "fieldtype": "Date", "width": 120},
         {
             "fieldname": "reff",
             "label": "REFF.",

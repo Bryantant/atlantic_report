@@ -12,7 +12,7 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"label": "Customer", "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 200},
+        {"label": "Customer", "fieldname": "customer", "fieldtype": "Link", "options": "Customer", "width": 240},
         {"label": "Ccy", "fieldname": "currency", "fieldtype": "Data", "width": 60},
         {"label": "Amount", "fieldname": "amount", "fieldtype": "Currency", "options": "currency", "width": 120},
         {"label": "Tax", "fieldname": "tax", "fieldtype": "Currency", "options": "currency", "width": 120},
@@ -38,7 +38,7 @@ def get_data(filters):
         GROUP BY
             dn.customer, dn.currency
         ORDER BY
-            SUM(dn.grand_total) DESC
+            customer ASC
     """
 
     return frappe.db.sql(sql, filters, as_dict=True)

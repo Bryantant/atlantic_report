@@ -61,7 +61,7 @@ def get_columns(filters):
             "fieldname": "percent", 
             "label": "(%)", 
             "fieldtype": "Data", 
-            "width": 60, 
+            "width": 70, 
             "align": "right"
         }
     ]

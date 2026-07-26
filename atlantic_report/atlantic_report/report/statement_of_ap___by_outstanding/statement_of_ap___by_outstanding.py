@@ -38,6 +38,7 @@ def get_data(filters):
         FROM `tabSupplier`
         WHERE docstatus < 2
           AND (%(supplier)s IS NULL OR name = %(supplier)s)
+        ORDER BY name ASC
         """,
         params,
         as_dict=True,

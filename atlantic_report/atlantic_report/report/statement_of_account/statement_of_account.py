@@ -55,6 +55,7 @@ def get_data(filters):
         FROM `tabCustomer`
         WHERE docstatus < 2
           AND (%(customer)s IS NULL OR name = %(customer)s)
+        ORDER BY name ASC
         """,
         customer_params,
         as_dict=True,

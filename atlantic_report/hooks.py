@@ -25,8 +25,8 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/atlantic_report/css/atlantic_report.css"
-# app_include_js = "/assets/atlantic_report/js/atlantic_report.js"
+app_include_css = "/assets/atlantic_report/css/atlantic_report.css"
+app_include_js = ["desk_overrides.bundle.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/atlantic_report/css/atlantic_report.css"

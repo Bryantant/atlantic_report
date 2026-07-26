@@ -7,7 +7,7 @@ frappe.query_reports["Aging Statement of AP - Detail"] = {
             "fieldname": "from_date",
             "label": __("From Date"),
             "fieldtype": "Date",
-            "default": frappe.datetime.add_months(frappe.datetime.get_today(), -1),
+            "default": frappe.datetime.month_start(),
             "reqd": 0
         },
         {
