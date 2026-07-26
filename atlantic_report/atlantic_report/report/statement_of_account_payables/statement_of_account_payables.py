@@ -84,7 +84,9 @@ def get_data(filters):
             if r.get("is_opening_row") or r.get("is_total_row") or r.get("is_grand_total"):
                 continue
 
-            ccy = r.get("currency_display") or "SGD"
+            ccy = r.get("currency_display")
+            if not ccy:
+                continue
             if ccy not in grand_totals:
                 grand_totals[ccy] = {"debit": 0.0, "credit": 0.0}
 
@@ -118,18 +120,19 @@ def get_by_month_transactions(supplier, filters):
     - Journal Entry (Journal Adj.) TIDAK ditampilkan
     """
 
-    # Opening balance in invoice (transaction) currency
+    # Opening balance per currency → credit - debit (positive = owed to supplier)
     opening_sql = """
-        SELECT SUM(debit_in_transaction_currency - credit_in_transaction_currency)
+        SELECT transaction_currency, SUM(credit_in_transaction_currency - debit_in_transaction_currency) AS opening_bal
         FROM `tabGL Entry`
         WHERE party_type = 'Supplier'
           AND party = %s
           AND posting_date < %s
           AND is_cancelled = 0
           AND voucher_type != 'Journal Entry'
+        GROUP BY transaction_currency
     """
-    opening_result = frappe.db.sql(opening_sql, (supplier, filters.from_date))
-    opening_bal = flt(opening_result[0][0], 2) if opening_result else 0.0
+    opening_results = frappe.db.sql(opening_sql, (supplier, filters.from_date), as_dict=True)
+    opening_by_ccy = {r.transaction_currency: flt(r.opening_bal, 2) for r in opening_results}
 
     trans_sql = """
         SELECT
@@ -185,37 +188,40 @@ def get_by_month_transactions(supplier, filters):
         trans_sql, (supplier, filters.from_date, filters.to_date), as_dict=True
     )
 
-    if not transactions:
+    if not transactions and not opening_by_ccy:
         return []
 
     result = []
-    curr = transactions[0].currency or "SGD"
 
-    # OPENING BALANCE ROW
-    result.append({
-        "date": filters.from_date,
-        "reff": "",
-        "currency_display": "",
-        "description": "",
-        "bill_no": "BALANCE",
-        "trm": "",
-        "debit": "",
-        "credit": "",
-        "balance": opening_bal,
-        "indent": 1,
-        "is_opening_row": 1,
-    })
+    # OPENING BALANCE ROW(S) — one per currency
+    for ccy, bal in opening_by_ccy.items():
+        result.append({
+            "date": filters.from_date,
+            "reff": "",
+            "currency_display": ccy,
+            "description": "",
+            "bill_no": "BALANCE",
+            "trm": "",
+            "debit": "",
+            "credit": "",
+            "balance": bal,
+            "indent": 1,
+            "is_opening_row": 1,
+        })
 
-    running_balance = opening_bal
+    running_balance = dict(opening_by_ccy)
 
     # DETAIL TRANSAKSI
     for row in transactions:
-        # balance dalam transaction currency
-        running_balance += flt(row.debit) - flt(row.credit)
+        ccy = row.currency
+        if ccy not in running_balance:
+            running_balance[ccy] = 0.0
+        # credit - debit: balance increases with invoices, decreases with payments
+        running_balance[ccy] += flt(row.credit) - flt(row.debit)
 
-        row.balance = flt(running_balance, 2)
+        row.balance = flt(running_balance[ccy], 2)
         row.indent = 1
-        row.currency_display = row.currency
+        row.currency_display = ccy
 
         if row.trm == 0:
             row.trm = ""
